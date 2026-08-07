@@ -9,7 +9,8 @@ Windows 桌面修音工具，提供音訊載入、波形／頻譜檢視、播放
 
 | 版本 | 說明 |
 |------|------|
-| **v0.2.1** | 新增降噪（decision-directed Wiener，含遮罩遲滯與峰值限幅）、頻譜檢視（Shift+F）；「處理」選單改為依修音順序排列 |
+| **v0.2.2** | 波形畫布 I-beam 游標、雙擊全選；高通濾波改為九段遞進不循環（20～1000 Hz），取消改用 Ctrl+Z；介面在地化。**聲音與 v0.2.1 逐位元相同**（引擎與 DSP 未改） |
+| v0.2.1 | 新增降噪（decision-directed Wiener，含遮罩遲滯與峰值限幅）、頻譜檢視（Shift+F）；「處理」選單改為依修音順序排列 |
 | v0.2.0 | v0.2 Processing 正式版。轉換取樣類型（聲道／取樣率／位深／dither）、高通濾波（200 Hz / 4 階）、響度工具組（音量調整 ±1／±3 dB、小聲補強、自動響度最大化 Ctrl+M）、區段選取處理、Undo/Redo、A/B 比較、16-bit 量化＋TPDF dither |
 | v0.2.0-dev.6 | v0.2.0 的最後一個開發預覽 |
 | v0.2.0-dev.4 | Audition 風格 UX（two-cursor、Loop 播放、自動捲動）、選單列整併、最近開啟檔案、存檔／另存新檔、release 附 build provenance 與 SHA-256 checksum |
@@ -34,7 +35,7 @@ Windows 桌面修音工具，提供音訊載入、波形／頻譜檢視、播放
    | 按鍵 | 功能 |
    |------|------|
    | F11 | 轉換取樣類型 |
-   | H | 套用高通濾波（200 Hz） |
+   | H | 高通濾波，每按一次進到下一段 cutoff（20 / 50 / 100 / 200 / 300 / 400 / 600 / 800 / 1000 Hz，到頂即停，不繞回） |
    | N | 降噪 1 dB（Ctrl 加按為 3 dB） |
    | `/` | 小聲補強 1 dB（Ctrl 加按為 3 dB） |
    | `+` / `−` | 音量增加／減少 1 dB（Ctrl 加按為 3 dB） |
@@ -44,10 +45,12 @@ Windows 桌面修音工具，提供音訊載入、波形／頻譜檢視、播放
    | Ctrl+Z | 復原 |
 
 5. 在波形上拖曳可框選區段；處理操作若支援片段處理則只作用於該範圍，否則作用於
-   整個檔案（**降噪為全檔操作，不受選取範圍影響**）
+   整個檔案（**降噪與高通濾波為全檔操作，不受選取範圍影響**）。
+   波形上**雙擊可全選整個檔案**
 6. 滿意後用 Ctrl+S 儲存，或 Ctrl+Shift+S 另存為 WAV
 
 降噪、音量與小聲補強皆為「按一次加一級」，連按可累加，`Ctrl+Z` 退回上一級。
+高通濾波同樣按一次進一段，**取消高通亦用 `Ctrl+Z`**。
 
 完整快捷鍵與功能說明見
 [原始碼 repo 的 README](https://github.com/LinChihShan/AudioGo#readme)。
@@ -57,7 +60,7 @@ Windows 桌面修音工具，提供音訊載入、波形／頻譜檢視、播放
 每個版本皆附 `.sha256` 檔案，可用 PowerShell 核對：
 
 ```powershell
-Get-FileHash -Path AudioGo-win64-v0.2.1.zip -Algorithm SHA256
+Get-FileHash -Path AudioGo-win64-v0.2.2.zip -Algorithm SHA256
 ```
 
 ZIP 內另含 `BUILD-METADATA.txt`，記錄版本、來源 commit 與建置時間。
